@@ -535,23 +535,71 @@ function ImpostaPivot(nomefiltro, nomecolonne, nomerighe, nomemisure, id, idcat,
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
             var rows = sheet.rows;
-            var rowIdx, colIdx, cells, cell;
+            var indiceRiga, colIdx, cells, cell;
+            var indiceColonna;
+            var cella;
 
-            for (rowIdx = 0; rowIdx < rows.length; rowIdx++) {
-                if (rows[rowIdx].type === "data") {
-                    cells = rows[rowIdx].cells;
+            for (indiceRiga = 0; indiceRiga < rows.length; indiceRiga++) {
+                cells = rows[indiceRiga].cells;
+                //if (rowIdx == 0) {
+                //    cells[0].value = reportCorrente.getNome();
+                //}
 
-                    for (colIdx = sheet.freezePane.colSplit; colIdx < cells.length; colIdx++) {
-                        cell = cells[colIdx];
+                for (indiceColonna = 0; indiceColonna < cells.length; indiceColonna++) {
+                    cella = cells[indiceColonna]
 
-                        cell.background = "#aabbcc";
+                    //Aggiunge il titolo
+                    if (indiceRiga == 0 && indiceColonna == 0) {
+                        cella.value = reportCorrente.getNome();
+                    }
 
-                        //cell.value = kendo.toString(cell.value, "n0");
-                        cell.value = kendo.toString(kendo.parseFloat(cell.value), "n0");
+                    if (cella.color == '#fff') {
+                        //E' un'intestazione
+                        //cella.background = '#ff0000';
+                    }
+                    else {
+                        //E' un dato
+                        cella.value = kendo.toString(kendo.parseFloat(cella.value), "n0");
                     }
                 }
+
+                //if (rows[rowIdx].type === "data") {
+                //    //cells = rows[rowIdx].cells;
+
+                //    //for (colIdx = 0; colIdx < cells.length; colIdx++) {
+                //    for (colIdx = sheet.freezePane.colSplit; colIdx < cells.length; colIdx++) {
+                //        cell = cells[colIdx];
+
+                //        cell.background = "#aabbcc";
+
+                //        cell.value = kendo.toString(cell.value, "c");
+
+                //        //@@@paccosi Originale commentata
+                //        //cell.value = kendo.toString(kendo.parseFloat(cell.value), "n0");
+                //    }
+                //}
             }
         },
+        //excelExport: function (e) {
+        //    var sheet = e.workbook.sheets[0];
+        //    var rows = sheet.rows;
+        //    var rowIdx, colIdx, cells, cell;
+
+        //    for (rowIdx = 0; rowIdx < rows.length; rowIdx++) {
+        //        if (rows[rowIdx].type === "data") {
+        //            cells = rows[rowIdx].cells;
+
+        //            for (colIdx = sheet.freezePane.colSplit; colIdx < cells.length; colIdx++) {
+        //                cell = cells[colIdx];
+
+        //                cell.background = "#aabbcc";
+
+        //                //cell.value = kendo.toString(cell.value, "n0");
+        //                cell.value = kendo.toString(kendo.parseFloat(cell.value), "n0");
+        //            }
+        //        }
+        //    }
+        //},
         //autoBind: false,
         filterable: true,
         sortable: true,
@@ -619,6 +667,7 @@ function ImpostaPivot(nomefiltro, nomecolonne, nomerighe, nomemisure, id, idcat,
 
     caricaTreeviewConfigurator();
 
+    //@@@paccosi da rivedere, perche' troppo lento con alberature estese
     //Codice necessario per intercettare quando la finestra popup Includi Campi della pivot grid viene aperta
     //in modo da effettuare alcune operazioni per correggere un problema.
     //In particolare la finestra non visualizza correttamente le precedenti scelte effettuate dall'utente
