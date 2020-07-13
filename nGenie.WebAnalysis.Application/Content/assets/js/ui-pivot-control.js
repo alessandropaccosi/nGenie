@@ -535,51 +535,44 @@ function ImpostaPivot(nomefiltro, nomecolonne, nomerighe, nomemisure, id, idcat,
         excelExport: function (e) {
             var sheet = e.workbook.sheets[0];
             var rows = sheet.rows;
-            var indiceRiga, colIdx, cells, cell;
+            var indiceRiga, indiceColonna, celle, cella;
             var indiceColonna;
-            var cella;
 
             for (indiceRiga = 0; indiceRiga < rows.length; indiceRiga++) {
-                cells = rows[indiceRiga].cells;
+                celle = rows[indiceRiga].cells;
                 //if (rowIdx == 0) {
                 //    cells[0].value = reportCorrente.getNome();
                 //}
 
-                for (indiceColonna = 0; indiceColonna < cells.length; indiceColonna++) {
-                    cella = cells[indiceColonna]
+                for (indiceColonna = 0; indiceColonna < celle.length; indiceColonna++) {
+                    cella = celle[indiceColonna]
 
-                    //Aggiunge il titolo
+                    //Aggiunge il titolo nella prima cella in alto a sinistra e lo formatta in modo da essere centrato
                     if (indiceRiga == 0 && indiceColonna == 0) {
                         cella.value = reportCorrente.getNome();
+                        cella.hAlign = "center";
+                        cella.vAlign = "center";
+                        //cella.hAlign = "right";
                     }
 
                     if (cella.color == '#fff') {
-                        //E' un'intestazione
+                        //Caso in cui la cella e' un'intestazione
                         //cella.background = '#ff0000';
                     }
                     else {
-                        //E' un dato
-                        cella.value = kendo.toString(kendo.parseFloat(cella.value), "n0");
+                        //Caso in cui la cella e' un dato
+
+                        cella.format = "#,##0";
+                        //Esempio trovato su internet: https://jsfiddle.net/dwosrs0x/4/
+                        //cella.format = "#,##0.00;[Red](#,##0.00);-";
+
+                        //Usando questa istruzione la formattazione andrebbe bene ma Excel poi vedrebbe la cella come stringa riportando un avvertimento
+                        //cella.value = kendo.toString(kendo.parseFloat(cella.value), "n0");
                     }
                 }
-
-                //if (rows[rowIdx].type === "data") {
-                //    //cells = rows[rowIdx].cells;
-
-                //    //for (colIdx = 0; colIdx < cells.length; colIdx++) {
-                //    for (colIdx = sheet.freezePane.colSplit; colIdx < cells.length; colIdx++) {
-                //        cell = cells[colIdx];
-
-                //        cell.background = "#aabbcc";
-
-                //        cell.value = kendo.toString(cell.value, "c");
-
-                //        //@@@paccosi Originale commentata
-                //        //cell.value = kendo.toString(kendo.parseFloat(cell.value), "n0");
-                //    }
-                //}
             }
         },
+        //Codice originale commentato
         //excelExport: function (e) {
         //    var sheet = e.workbook.sheets[0];
         //    var rows = sheet.rows;
@@ -667,71 +660,71 @@ function ImpostaPivot(nomefiltro, nomecolonne, nomerighe, nomemisure, id, idcat,
 
     caricaTreeviewConfigurator();
 
-    //@@@paccosi da rivedere, perche' troppo lento con alberature estese
+    //@@@paccosi da rivedere, codice commentato perche' troppo lento su alberature estese
     //Codice necessario per intercettare quando la finestra popup Includi Campi della pivot grid viene aperta
     //in modo da effettuare alcune operazioni per correggere un problema.
     //In particolare la finestra non visualizza correttamente le precedenti scelte effettuate dall'utente
-    $('[data-role="pivotsettingtarget"]').each(function (indice, setting) {
-        var fieldMenu = $(setting).data("kendoPivotSettingTarget").fieldMenu; //get setting FieldMenu
-        if (fieldMenu) {
-            fieldMenu.includeWindow.bind("open", function () {
-                var treeView = fieldMenu.treeView;
-                if (treeView) {
-                    //Salva il treeview nella variabile globale
-                    treeviewCampiDaIncludere = treeView;
+    //$('[data-role="pivotsettingtarget"]').each(function (indice, setting) {
+    //    var fieldMenu = $(setting).data("kendoPivotSettingTarget").fieldMenu; //get setting FieldMenu
+    //    if (fieldMenu) {
+    //        fieldMenu.includeWindow.bind("open", function () {
+    //            var treeView = fieldMenu.treeView;
+    //            if (treeView) {
+    //                //Salva il treeview nella variabile globale
+    //                treeviewCampiDaIncludere = treeView;
 
-                    //Disabilita la visualizzazione globale delle eccezioni. Durante il caricamento del treeview
-                    //si possono verificare degli errori che non sembrano avere infuenza e 
-                    //vengono nascosti all'utente
-                    eccezioniAbilitate = false;
+    //                //Disabilita la visualizzazione globale delle eccezioni. Durante il caricamento del treeview
+    //                //si possono verificare degli errori che non sembrano avere infuenza e 
+    //                //vengono nascosti all'utente
+    //                eccezioniAbilitate = false;
 
-                    //Nasconde il treeview
-                    treeviewCampiDaIncludere.element.hide();
-                    //aumentaDimensioniFinestraPopupIncludiCampi();
+    //                //Nasconde il treeview
+    //                treeviewCampiDaIncludere.element.hide();
+    //                //aumentaDimensioniFinestraPopupIncludiCampi();
 
-                    //Mostra un icona progress
-                    kendo.ui.progress($('.k-window-titlebar'), true);
+    //                //Mostra un icona progress
+    //                kendo.ui.progress($('.k-window-titlebar'), true);
 
-                    //Funzione chiamata dopo che il treeview ha finito di recuperare i dati
-                    treeView.bind("dataBound", function (e) {
-                        try {
-                            //Occorre verificare se il treeview e' visibile perche' dopo la compressione del 
-                            //treeview la funzione corrente viene chiamata ancora una volta, non chiaro perche' 
-                            if (treeviewCampiDaIncludere.element.is(":hidden")) {
+    //                //Funzione chiamata dopo che il treeview ha finito di recuperare i dati
+    //                treeView.bind("dataBound", function (e) {
+    //                    try {
+    //                        //Occorre verificare se il treeview e' visibile perche' dopo la compressione del 
+    //                        //treeview la funzione corrente viene chiamata ancora una volta, non chiaro perche' 
+    //                        if (treeviewCampiDaIncludere.element.is(":hidden")) {
 
-                                //Richiede un espansione del treeview. Per espanderlo tutto saranno necessarie
-                                //diverse chiamate alla funzione expand
-                                treeviewCampiDaIncludere.expand(".k-item");
+    //                            //Richiede un espansione del treeview. Per espanderlo tutto saranno necessarie
+    //                            //diverse chiamate alla funzione expand
+    //                            treeviewCampiDaIncludere.expand(".k-item");
 
-                                //Quando il treeview e' espanso tutto quanto non ci saranno piu' elementi
-                                //di classe k-i-expand
-                                if (treeviewCampiDaIncludere.element.find('span.k-i-expand').length == 0) {
+    //                            //Quando il treeview e' espanso tutto quanto non ci saranno piu' elementi
+    //                            //di classe k-i-expand
+    //                            if (treeviewCampiDaIncludere.element.find('span.k-i-expand').length == 0) {
 
-                                    //Richiede la compressione del treeview. Curiosamente dopo questa
-                                    //richiesta si verifica un ulteriore databound come se il treeview recuperasse dati
-                                    treeviewCampiDaIncludere.element.data("kendoTreeView").collapse(".k-item");
+    //                                //Richiede la compressione del treeview. Curiosamente dopo questa
+    //                                //richiesta si verifica un ulteriore databound come se il treeview recuperasse dati
+    //                                treeviewCampiDaIncludere.element.data("kendoTreeView").collapse(".k-item");
 
-                                    //Mostra il treeview
-                                    treeviewCampiDaIncludere.element.show();
+    //                                //Mostra il treeview
+    //                                treeviewCampiDaIncludere.element.show();
 
-                                    //Nasconde l'icona progress
-                                    kendo.ui.progress($('.k-window-titlebar'), false);
+    //                                //Nasconde l'icona progress
+    //                                kendo.ui.progress($('.k-window-titlebar'), false);
 
-                                    //Aumenta le dimensioni della finestra popup perche' per default e' molto piccola
-                                    aumentaDimensioniFinestraPopupIncludiCampi();
+    //                                //Aumenta le dimensioni della finestra popup perche' per default e' molto piccola
+    //                                aumentaDimensioniFinestraPopupIncludiCampi();
 
-                                    //Abilita la visualizzazione globale delle eccezioni precedentemente disabilitate
-                                    eccezioniAbilitate = true;
-                                }
-                            }
-                        }
-                        catch (err) {
-                        }
-                    });
-                }
-            });
-        }
-    });
+    //                                //Abilita la visualizzazione globale delle eccezioni precedentemente disabilitate
+    //                                eccezioniAbilitate = true;
+    //                            }
+    //                        }
+    //                    }
+    //                    catch (err) {
+    //                    }
+    //                });
+    //            }
+    //        });
+    //    }
+    //});
 
     //Configurator
     //impostaConfigurator(_dSource);
@@ -1149,11 +1142,13 @@ $(document).ready(function () {
         if ($(this).is(":checked")) {
             $('#nomeFiltro').attr('readonly', 'readonly').attr('onkeydown', "event.preventDefault()");
             $("#elimina").show();
+            $('#tooltipElimina').show();
             $('#nomeFiltro').val($("#hidNomeFiltro").val());
         }
         else {
             $('#nomeFiltro').removeAttr('readonly').removeAttr('onkeydown');
             $("#elimina").hide();
+            $('#tooltipElimina').hide();
             $('#nomeFiltro').val($("#hidNomeFiltro").val() + "_");
         }
     });
