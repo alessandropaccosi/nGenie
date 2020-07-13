@@ -1,0 +1,42 @@
+﻿@model nGenie.WebAnalysis.Application.CategoriaFiltro
+
+@{
+    Layout = "~/Views/Shared/_Content.cshtml";
+
+    //string getSelectedFromLevel(int n)
+    //{
+    //    return Model.Livello == n ?
+    //        "selected"
+    //        : "";
+    //}
+
+    //string disableValue = Model.PkUtenteId > 0 ? "disabled" : "";
+}
+
+@section Content
+{
+    <input type="hidden" id="DatabaseId" value="@Model.DatabaseOlapId.ToString()">
+    <input type="hidden" id="CuboId" value="@Model.PK_CategoriaFiltroId.ToString()">
+    <input type="hidden" id="Attivo" value="@Model.Attivo.ToString().ToLower()">
+    <table class="table" cellspacing="0">
+        <tbody>
+            <tr>
+                <td><label for="NomeCubo">Nome del cubo</label></td>
+                <td><input type="text" id="NomeCubo" value="@Model.CubeName" style="width:300px"></td>
+            </tr>
+
+            <tr>
+                <td><label for="NomeCuboFriendly">Nome da visualizzare</label></td>
+                <td><input type="text" id="NomeCuboFriendly" value="@Model.NomeCategoria" style="width:300px"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <div>
+        <input type="button" value="Annulla" onclick="caricaGestioneCubi(@Model.DatabaseOlapId.ToString());">
+        <input type="button" value="Salva" onclick="inserisciModificaCubo();">
+    </div>
+}
+
+
+

@@ -1,0 +1,80 @@
+﻿
+@model IEnumerable<nGenie.WebAnalysis.Application.Utente>
+
+@{
+    Layout = "~/Views/Shared/_Content.cshtml";
+}
+
+@section Content
+{
+    <div id="divTableZeroConfiguration">
+        <a href="#" class="btn btn-primary btn-sm" onclick="caricaVistaParziale('@Url.Action("PartialViewInserisciModificaUtente")')">Nuovo</a>
+        <table id="tableZeroConfiguration" class="display">
+            <thead>
+                <tr>
+                    <th>
+                        Username
+                    </th>
+
+                    <th>
+                        Ruolo
+                    </th>
+
+                    <th>
+                        Opzioni
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Username
+                        </td>
+                        <td>
+                            @item.Ruoli.Nome
+                        </td>
+                        <td>
+                            @{
+                                string urlInserisciModifica = string.Format("{0}/{1}",
+                                        Url.Action("PartialViewInserisciModificaUtente", "Admin"),
+                                        item.PkUtenteId);
+
+                                string abilitazioneParameter = string.Format("{0}",
+                                                                item.PkUtenteId);
+
+                                string abilitazioneTextValue = item.Abilitato ? "Disabilita" : "Abilita";
+                                string abilitazioneClasse = item.Abilitato ? "abilitato" : "disabilitato";
+                            }
+                            <a href="#" onclick="javascript:caricaVistaParziale('@urlInserisciModifica');">Modifica</a>
+
+                            @*Autorizzazioni previste solo per gli utenti non administratorstrator*@
+                            @{
+                                if (!item.Ruoli.IsAdministrator)
+                                {
+                                    <span>|</span>
+                                    <a href="#" onclick="javascript:caricaAutorizzazioni('@item.PkUtenteId.ToString()');">Autorizzazioni</a>
+                                }
+
+                                @*Un amministratore non puo' abilitare o disabilitare se' stesso*@
+
+                                if (item.PkUtenteId != ViewBag.UserId)
+                                {
+                                    <span>|</span>
+                                    <a id="@item.PkUtenteId"
+                                       class="@abilitazioneClasse"
+                                       data-abilitato="@item.Abilitato.ToString().ToLower()"
+                                       href="#"
+                                       onclick="javascript:abilitaDisabilitaUtente(@abilitazioneParameter)">
+                                        @abilitazioneTextValue
+                                    </a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

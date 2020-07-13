@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNet.Identity
+@using nGenie.WebAnalysis.Application.Common;
+
+<nav class="navbar header-navbar pcoded-header">
+    <div class="navbar-wrapper">
+        <div class="navbar-logo">
+            <a class="mobile-menu waves-effect waves-light" id="mobile-collapse" href="#!">
+                <i class="ti-menu" style:"display:hidden"></i>
+            </a>
+            <a href="/Home">
+                <img class="img-fluid" src="~/Content/assets/images/logos/tim-logo-whiteX50.png" alt="TIM - Process Monitoring Portal" height="50" />
+            </a>
+        </div>
+        <div class="navbar-container container-fluid">
+            <ul class="nav-left">
+                <li>
+                    <a href="#!" onclick="javascript: toggleFullScreen();" class="waves-effect waves-light">
+                        <i class="ti-fullscreen"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="nav-right">
+                @if (Sessione.IsValid)
+                {
+                    <li class="">
+
+                        <a href="#!" class="waves-effect waves-light">
+                            <div>
+                                <span style="font-size:14px">
+                                    Utenti connessi: <span id="NumeroUtentiConnessi"></span>
+                                    @*Serve per spostare piu' a destra il pallino rosso*@
+                                    &nbsp;&nbsp;
+
+                                    @*Corrisponde ad un pallino rosso che lampeggia*@
+                                    <span id="PallinoRossoNumeroUtenti" class="badge bg-c-red"></span>
+                                </span>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li class="user-profile header-notification">
+                        <a href="#!" class="waves-effect waves-light">
+                            <span>@Sessione.Dati.GetNomeEsteso()</span>
+                            <i class="ti-angle-down"></i>
+                        </a>
+                        <ul class="show-notification profile-notification" style="display: none;">
+                            @using (Html.BeginForm("LogOff", "Info", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <li class="">
+                                    <a href="#" onclick="javascript:document.getElementById('logoutForm').submit()">
+                                        <i class="ti-layout-sidebar-left"></i> Log off
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>

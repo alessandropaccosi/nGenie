@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@section CustomCssSection
+{
+<style type="text/css">
+.pcoded[theme-layout=vertical][vertical-placement=left][vertical-nav-type=expanded][vertical-effect=shrink] .pcoded-content {
+    margin-left: 0 !important;
+}
+.col-auto h6
+{
+font-size: 1.5em !important;
+}
+</style>
+}
+
+<!-- INI - CONTENT MAIN PAGE HEAD -->
+@Html.Partial("~/Views/Shared/_pageheader.cshtml")
+<!-- END - CONTENT MAIN PAGE HEAD -->
+<!-- INI - CONTENT MAIN PAGE INNER -->
+<div class="pcoded-inner-content">
+    <div class="main-body">
+        <div class="page-wrapper">
+            <div class="page-body">
+                <div class="row">
+                    <div class="col-xl-6 col-md-6">
+                        <div class="card">
+                            <div class="card-block">
+                                <div class="row align-items-center m-l-0">
+                                    <div class="col-auto">
+                                        <i class="fa fa-line-chart f-80 text-c-purple"></i>
+                                    </div>
+                                    <div class="col-auto">
+                                        <h6 class="text-muted m-b-10">Analysis</h6>
+                                        @Html.ActionLink("Entra", "Index", "Analysis")
+                                        <h2 class="m-b-0"></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*Accesso a Report condivisi - Visibile a tutti*@
+                    <div class="col-xl-6 col-md-6">
+                        <div class="card">
+                            <div class="card-block">
+                                <div class="row align-items-center m-l-0">
+                                    <div class="col-auto">
+                                        <i class="fa fa-line-chart f-80 text-c-purple"></i>
+                                    </div>
+                                    <div class="col-auto">
+                                        <h6 class="text-muted m-b-10">Analysis</h6>
+                                        @Html.ActionLink("Report Condivisi", "Index", "ReportCondivisi")
+                                        <h2 class="m-b-0"></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*Accesso a funzionalità amministrative*@
+                    @if (ViewBag.IsAdministrator != null && ViewBag.IsAdministrator)
+                    {
+                        <div class="col-xl-6 col-md-6">
+                            <div class="card">
+                                <div class="card-block">
+                                    <div class="row align-items-center m-l-0">
+                                        <div class="col-auto">
+                                            <i class="fa fa-user-plus f-80 text-c-purple"></i>
+                                        </div>
+                                        <div class="col-auto">
+                                            <h6 class="text-muted m-b-10">Area Amministrazione</h6>
+                                            @Html.ActionLink("Gestione Utenti", "Index", "Admin")
+                                            <h2 class="m-b-0"></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END - CONTENT MAIN PAGE INNER -->
+
+@section scripts
+{
+<script>
+$(window).on('load',function () {
+  $('.mobile-menu').hide();
+});
+</script>
+}

@@ -1,0 +1,87 @@
+﻿@model  nGenie.WebAnalysis.Application.Models.UtenteAutorizzazioniCubi
+@{
+    Layout = "~/Views/Shared/_Content.cshtml";
+}
+
+@section Content
+{
+    <input type="hidden" id="PkUtenteId" name="PkUtenteId" value="@Model.Utente.PkUtenteId">
+    <span>Utente selezionato: <b>@Model.Utente.Username</b></span>
+    <br />
+    <br />
+    <div>
+        <select class="js-example-basic-single col-sm-12 select2-hidden-accessible" tabindex="-1" aria-hidden="true"
+                onchange="mostraAutorizzazioniCubi(this.value);">
+            <option value="0">Selezionare un database</option>
+            @foreach (var server in Model.ListaServer)
+            {
+                <optgroup label="@server.Nome">
+                    @foreach (var database in server.DatabasesOlap)
+                    {
+                        <option value="@database.Id">@database.Nome</option>
+                    }
+                </optgroup>
+            }
+        </select>
+    </div>
+
+    @*<select id="selectDatabase" name="selectDatabase" onchange="mostraAutorizzazioniCubi(this.value);">
+        <option value="0">Selezionare un database</option>
+        @foreach (var item in Model.ListaDatabase)
+        {
+            <option value="@item.Id">@item.Nome</option>
+        }
+    </select>*@
+    <br />
+
+    @{
+        bool presenteAutorizzazione(int cuboId)
+        {
+            var result = @Model.ListaAutorizzazioniCubi.Where(
+                auth =>
+                    auth.UtenteId == Model.Utente.PkUtenteId
+                      &&
+                    auth.CuboId == cuboId);
+
+            return result.ToArray().Count() > 0;
+        }
+
+        string valoreChecked(int cuboId)
+        {
+            return presenteAutorizzazione(cuboId) ? "checked" : "";
+        }
+    }
+
+    @*Il seguente div viene utilizzato per riportare le checkbox per assegnare i diritti sui cubi appartenenti al database sopra selezionato*@
+    <div id="pageContent">
+
+        @*Serve per riportare cosa l'utente deve fare con i cubi. Esempio: Mettere una spunta sui cubi da abilitare *@
+        <br />
+        <span id="cubiInformazioni" />
+        <br />
+        <br />
+
+        @foreach (var database in Model.ListaDatabase)
+        {
+            IEnumerable<CategoriaFiltro> listaCubi = Model.ListaCubi.Where(cubo => cubo.DatabaseOlapId == database.Id);
+
+            foreach (var cubo in listaCubi)
+            {
+                <div class="autorizzazione" data-databaseId="@cubo.DatabaseOlapId" style="display:none">
+                    <input type="checkbox"
+                           id="@cubo.PK_CategoriaFiltroId"
+                           @valoreChecked(cubo.PK_CategoriaFiltroId)>
+                    @cubo.NomeCategoria
+                    <br />
+                </div>
+            }
+        }
+        <br />
+        <div>
+            <input type="button" value="Annulla" onclick="caricaListaUtenti()">
+            <input type="button" value="Salva e chiudi" onclick="salvaAutorizzazioni()">
+        </div>
+    </div>
+}
+
+

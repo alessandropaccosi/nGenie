@@ -1,0 +1,138 @@
+﻿@using nGenie.WebAnalysis.Application.Models;
+
+@model IEnumerable<nGenie.WebAnalysis.Application.Models.MyCategoriaFiltro>
+@{
+    nGenie.WebAnalysis.Application.Models.DbModel.DatabaseOlap[] listaDatabase = ViewBag.ListaDatabase;
+
+    string getMenuReportName(string nomeReport)
+    {
+        const int MAX_LENGTH = 22;
+        return nomeReport.Length > MAX_LENGTH ?
+            string.Format("{0}...", nomeReport.Substring(0, MAX_LENGTH))
+            : nomeReport;
+    }
+
+    //Restituisce il nome del tooltip che deve apparire quando il puntatore del mouse rimane sul Report del menu.
+    string getMenuReportTooltip(string nomeReport)
+    {
+        string result = "";
+        if (getMenuReportName(nomeReport) != nomeReport)
+            result = nomeReport;
+
+        return result;
+    }
+
+    string getReportOnClick(MyFiltro myFiltro)
+    {
+        string result = "";
+        if (myFiltro.Predefinito)
+            result = String.Format("javascript:CambiaDataSource({0})", -myFiltro.IdCategoria);
+        else
+            result = String.Format("javascript:CambiaDataSource({0})", myFiltro.Id);
+
+        return result;
+    }
+}
+
+@if (
+        ViewBag.IsMenuStandard != null
+            &&
+        ViewBag.IsMenuStandard
+    )
+{
+    <nav class="pcoded-navbar">
+        <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
+        <div class="pcoded-inner-navbar main-menu">
+            <div class="pcoded-navigation-label">Navigation</div>
+            <ul class="pcoded-item pcoded-left-item" item-border="true" item-border-style="none" subitem-border="true">
+                    <li class="pcoded-hasmenu  pcoded-trigger" dropdown-icon="style3" subitem-icon="style7">
+                        <a id="menuPrincipale" href="javascript:void(0)" class="waves-effect waves-dark menu-item selected">
+                            <span class="pcoded-micon"><i class="ti-layout"></i><b>P</b></span>
+                            <span class="pcoded-mtext">Menu</span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                        <ul class="pcoded-submenu" style="display:block;">
+                                    <li>
+                                        <a id="menuItemServer" class="menu-item" href="#" onclick="caricaListaServer();">Gestione Server</a>
+                                    </li>
+                                    <li>
+                                        <a id="menuItemDatabase" class="menu-item" href="#" onclick="caricaListaDatabase();">Gestione Database</a>
+                                    </li>
+                                    <li>
+                                        <a id="menuItemCubi" class="menu-item" href="#" onclick="caricaGestioneCubi();">Gestione Cubi</a>
+                                    </li>
+                                    <li>
+                                        <a id="menuItemUtenti" class="menu-item selected" href="#" onclick="caricaListaUtenti();">Gestione Utenti</a>
+                                    </li>
+                        </ul>
+                    </li>
+            </ul>
+        </div>
+    </nav>
+}
+else if (Model != null && listaDatabase != null)
+{
+    <nav class="pcoded-navbar">
+        <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
+        <div class="pcoded-inner-navbar main-menu">
+            <div class="pcoded-navigation-label">Navigation</div>
+            <ul class="pcoded-item pcoded-left-item" item-border="true" item-border-style="none" subitem-border="true">
+
+                @foreach (var database in listaDatabase)
+                {
+                    @*Voce menu: Database*@
+                    <li class="pcoded-hasmenu  pcoded-trigger" dropdown-icon="style3" subitem-icon="style7">
+                        <a id="database_@database.Id" href="javascript:void(0)" class="waves-effect waves-dark menu-item">
+                            <span class="pcoded-micon"><i class="ti-layout"></i><b>P</b></span>
+                            <span class="pcoded-mtext">@database.Nome</span>
+                            @*<span class="pcoded-mtext">Menu</span>*@
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                        <ul class="pcoded-submenu" style="display:block;">
+                            @foreach (var item in Model)
+                            {
+                                if (item.DatabaseOlapId == database.Id)
+                                {
+                                    @*Voce menu: Cubo*@
+                                    <li class="pcoded-hasmenu" dropdown-icon="style1" subitem-icon="style7">
+                                        <a id="cubo_@item.Id" href="javascript:void(0)" class="waves-effect waves-dark menu-item">
+                                            <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
+                                            <span class="pcoded-mtext">@Html.DisplayFor(modelItem => item.Nome)</span>
+                                            <span class="pcoded-mcaret"></span>
+                                        </a>
+
+                                        <ul class="pcoded-submenu" style="display: none;" id="cat_@item.Id">
+
+                                            @*<li class="report-item menu-item">
+                                                <a href="javascript:void(0)" onclick="" class="waves-effect waves-dark">
+                                                    <span class="pcoded-mtext">Nuovo Report</span>
+                                                </a>
+                                            </li>*@
+
+                                            @foreach (var flt in item.Filtri)
+                                            {
+                                                @*Voce menu: Report*@
+                                            <li class="report-item menu-item" id="node_@flt.Id">
+
+                                                <a href="javascript:void(0)" onclick="@getReportOnClick(flt)" class="waves-effect waves-dark">
+                                                    <div class="fim-dropdown" data-toggle="tooltip" data-placement="bottom" title="@getMenuReportTooltip(flt.Nome)" data-delay="1000">
+                                                        <span class="pcoded-mtext">@getMenuReportName(flt.Nome)</span>
+                                                    </div>
+                                                        @*<span class="pcoded-mtext">@Html.DisplayFor(modelItem => flt.Nome, new { Title = item.Nome })</span>*@
+                                                </a>
+
+                                            </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+}
+
+

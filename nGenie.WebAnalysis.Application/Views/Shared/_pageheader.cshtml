@@ -1,0 +1,87 @@
+﻿@using nGenie.WebAnalysis.Application.Models
+@using nGenie.WebAnalysis.Application.Common
+
+@{ 
+    string getPageTitle()
+    {
+        string result = "";
+        if (ViewBag.PageTitle != null)
+        {
+            result = ViewBag.PageTitle;
+        }
+
+        return result;
+    }
+
+    string getPreviousPage()
+    {
+        string result = "";
+        if (ViewBag.PaginaPrecedente != null)
+        {
+            result = ViewBag.PaginaPrecedente;
+        }
+
+        return result;
+    }
+}
+
+<div class="page-header">
+    <div class="page-block">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="page-header-title">
+                    <!-- <h5 class="m-b-10">@ViewBag.PageTitle</h5> -->
+                    <p class="m-b-0">
+                        <h5 style="font-size:20px;">
+                            @if (getPreviousPage() != "")
+                            {
+                                <a href="@getPreviousPage()" data-toggle="tooltip" data-delay="1000" title="Indietro" class="btn waves-effect waves-light btn-primary btn-icon">
+                                    <i class="fa fa-arrow-left" style="margin-right: 0px"></i>
+                                </a>
+                            }
+
+                            @getPageTitle()
+                        </h5>
+                    </p>
+                </div>
+                <br />
+                <span style="font-size:14px">@DateTime.Now.ToString("dd/MM/yyyy") - Analysis</span>
+                @*<br />
+                <span style="font-size:14px">Utenti connessi: <span id="NumeroUtentiConnessi"></span></span>*@
+            </div>
+            <div class="col-md-4">
+                <ul class="breadcrumb" style="font-size:14px">
+                    <li class="breadcrumb-item" >
+                        <a href="/Home"> <i class="fa fa-home"></i> 
+                        </a>
+                    </li>
+                    <!--<li class="breadcrumb-item"><a href="@ViewBag.PageLink">Pages</a></li>-->
+                    <!--<li class="breadcrumb-item">@ViewBag.PageName</li>-->
+                    <li class="breadcrumb-item">Analysis Olap</li>
+                    <li id="pathNomeCubo" class="breadcrumb-item"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        // Reference the auto-generated proxy for the hub.
+        var hub = $.connection.utentiConnessiHub;
+        // Create a function that the hub can call back to display messages.
+        hub.client.updateUtentiConnessi = function (numeroUtentiConnessi) {
+            // Riporta nella pagina il numero di utenti connessi
+            $('#NumeroUtentiConnessi').text(numeroUtentiConnessi);
+        };
+
+        // Start the connection.
+        $.connection.hub.start().done(function () {
+            //$('#sendmessage').click(function () {
+            //    // Call the Send method on the hub.
+            //    hub.server.send($('#displayname').val(), $('#message').val());
+            //});
+        });
+
+    });
+</script>

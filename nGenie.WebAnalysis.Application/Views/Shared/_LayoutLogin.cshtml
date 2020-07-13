@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <!--[if lt IE 10]>
+      <script src="~/Content/assets/js/html5shiv.js"></script>
+      <script src="~/Content/assets/js/respond.min.js"></script>
+      <![endif]-->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Gradient Able Bootstrap admin template made using Bootstrap 4 and it has huge amount of ready made feature, UI components, pages which completely fulfills any dashboard needs." />
+    <meta name="keywords" content="olap, pivot, pivotgrid, analysis, ssas, office, excel, flat ui, admin Admin, Responsive, Landing, Bootstrap, App, Template, Mobile, iOS, Android, apple, creative app">
+    <meta name="author" content="nGenie DashLab" />
+    <link rel="icon" href="~/Content/assets/images/favicon.ico" type="image/x-icon">
+    <link href="~/Content/assets/css/roboto.css?family=Roboto:400,500" rel="stylesheet">
+
+    @Styles.Render("~/bootstrap-css")
+    @Styles.Render("~/waves-css")
+    @Styles.Render("~/themify-css")
+    @Styles.Render("~/font-awesome-css")
+    @Styles.Render("~/style-css")
+    @Styles.Render("~/mCustomScrollbar-css")
+
+    @RenderSection("CoreCssSection", required: false)
+    @RenderSection("CustomCssSection", required: false)
+    @RenderSection("CustomHeaderSection", required: false)
+</head>
+<body themebg-pattern="theme1">
+    @Html.Partial("~/Views/Shared/_preloader.cshtml")
+
+    @RenderBody()
+
+    <!--[if lt IE 10]>
+    <div class="ie-warning">
+        <h1>Warning!!</h1>
+        <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers
+        to access this website.
+        </p>
+        <div class="iew-container">
+        <ul class="iew-download">
+            <li>
+                <a href="http://www.google.com/chrome/">
+                    <img src="~/Content/assets/images/browser/chrome.png" alt="Chrome">
+                    <div>Chrome</div>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.mozilla.org/en-US/firefox/new/">
+                    <img src="~/Content/assets/images/browser/firefox.png" alt="Firefox">
+                    <div>Firefox</div>
+                </a>
+            </li>
+            <li>
+                <a href="http://www.opera.com">
+                    <img src="~/Content/assets/images/browser/opera.png" alt="Opera">
+                    <div>Opera</div>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.apple.com/safari/">
+                    <img src="~/Content/assets/images/browser/safari.png" alt="Safari">
+                    <div>Safari</div>
+                </a>
+            </li>
+            <li>
+                <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+                    <img src="~/Content/assets/images/browser/ie.png" alt="">
+                    <div>IE (9 & above)</div>
+                </a>
+            </li>
+        </ul>
+        </div>
+        <p>Sorry for the inconvenience!</p>
+    </div>
+    <![endif]-->
+
+    @Scripts.Render("~/jquery-js")
+    @Scripts.Render("~/jquery-ui-js")
+
+    @Scripts.Render("~/popper-js")
+    @Scripts.Render("~/bootstrap-js")
+    @Scripts.Render("~/waves-js")
+    @Scripts.Render("~/jquery-slimscroll-js")
+    @Scripts.Render("~/modernizr-js")
+    @Scripts.Render("~/i18next-js")
+    @Scripts.Render("~/i18nextXHRBackend-js")
+    @Scripts.Render("~/i18nextBrowserLanguageDetector-js")
+    @Scripts.Render("~/jquery-i18next-js")
+    @Scripts.Render("~/common-pages-js")
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

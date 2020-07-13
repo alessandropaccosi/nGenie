@@ -1,0 +1,47 @@
+﻿@model nGenie.WebAnalysis.Application.Models.PartialViewInserisciModificaDatabaseModel
+
+@{
+    Layout = "~/Views/Shared/_Content.cshtml";
+
+    string getSelectedFromLevel(int n)
+    {
+        return Model.Database.ServerOlapId == n ?
+            "selected"
+            : "";
+    }
+}
+
+@section Content
+{
+    <input type="hidden" id="DatabaseId" name="DatabaseOlapId" value="@Model.Database.Id.ToString()">
+    <input type="hidden" id="Attivo" name="Attivo" value="@Model.Database.Attivo.ToString().ToLower()">
+    <table id="tableUtenteDettaglio" class="table" cellspacing="0">
+        <tbody>
+            <tr>
+                <td>@Html.LabelFor(model => model.Database.Nome)</td>
+                <td><input type="text" id="NomeDatabase" value="@Model.Database.Nome" style="width:300px"></td>
+            </tr>
+            <tr>
+                <td>Server</td>
+                <td>
+                    <select id="ServerOlapId" name="ServerOlapId">
+                        @{
+                            <option value="-1">Selezionare il server del database</option>
+                            foreach (var item in Model.ListaServer)
+                            {
+                                <option value="@item.Id" @getSelectedFromLevel(item.Id)>@item.Nome</option>
+                            }
+                        }
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <div>
+        <input type="button" value="Annulla" onclick="javascript:caricaListaDatabase()">
+        <input type="button" value="Salva" onclick="inserisciModificaDatabase()">
+    </div>
+}
+
+

@@ -1,0 +1,585 @@
+﻿@using nGenie.WebAnalysis.Application.Common;
+@{
+    /**/
+
+    /**/
+
+    /**/
+
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAnalysis.cshtml";
+}
+
+@section CustomHeaderSection
+{
+
+    <!--  ANALYSIS TOOLBAR PLUGIN -->
+    @Styles.Render("~/analysis-toolbar-css")
+
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/plugins/switchery/css/switchery.min.css">
+
+    <!-- BEGIN CSS CORE PLUGINS -->
+    @Styles.Render("~/kendo-examples-css")
+    @Styles.Render("~/kendo-common-css")
+    @Styles.Render("~/kendo-rtl-css")
+    @Styles.Render("~/kendo-color-css")
+
+    <!-- BEGIN JS CORE PLUGINS -->
+    @Scripts.Render("~/kendo-all-js")
+    @Scripts.Render("~/kendo-culture-js")
+    @Scripts.Render("~/kendo-messages-js")
+    @Scripts.Render("~/kendo-console-js")
+}
+
+@section CustomJs
+{
+
+    @Scripts.Render("~/modal-js")
+    @Scripts.Render("~/classie-js")
+    @Scripts.Render("~/modalEffects-js")
+    @Scripts.Render("~/switchery-js")
+    @Scripts.Render("~/analysis-toolbar-js")
+    @Scripts.Render("~/xdr-js")
+    @Scripts.Render("~/jszip-js")
+    @Scripts.Render("~/jquery-base64-js")
+    @Scripts.Render("~/xml2json-js")
+
+    @Scripts.Render("~/ui-common-js")
+    @*<script src="~/Content/assets/js/ui-common.js"></script>*@
+    @Scripts.Render("~/ui-pivot-control-js")
+
+    @*//ELIMINARE*@
+    @*<script src="http://cdn-na.infragistics.com/igniteui/2016.2/latest/js/infragistics.loader.js"></script>*@
+}
+
+
+@section CustomCssSection
+{
+
+    <style type="text/css">
+        .mini-stat-info span {
+            display: block;
+            font-size: inherit !important;
+        }
+
+        .nav-tabs-custom .nav-item .nav-link {
+            font-size: 16px;
+        }
+
+        .table > tbody > tr > td, .table > tfoot > tr > td, .table > thead > tr > td {
+            padding: 0px !important;
+        }
+
+        .btn-group .btn-secondary {
+            height: 35px;
+            font-size: 12px;
+        }
+
+        #chart {
+            height: 400px;
+            padding-top: 1.2em;
+        }
+    </style>
+}
+
+<!-- INI - CONTENT MAIN PAGE HEAD -->
+@Html.Partial("~/Views/Shared/_pageheader.cshtml")
+
+<!-- END - CONTENT MAIN PAGE HEAD -->
+<!-- INI - CONTENT MAIN PAGE INNER -->
+<!-- Informazioni dell'utente attualmente connesso -->
+<input type="hidden" id="hidUtenteId" value="@Sessione.Dati.UserId" />
+
+<!-- Serve per informare il browser che dovrebbe caricare il Report appartenente al cubo specificato e non l'ultimo Report -->
+@{string cuboIdAsString = ViewBag.CuboId != null ? ViewBag.CuboId.ToString() : "";}
+<input type="hidden" id="hidIdCat" value="@cuboIdAsString" />
+
+<!-- Serve per informare il browser che dovrebbe caricare il Report specificato e non l'ultimo Report -->
+@{string reportIdAsString = ViewBag.ReportId != null ? ViewBag.ReportId.ToString() : "0";}
+<input type="hidden" id="hidId" value="@reportIdAsString" />
+
+<input type="hidden" id="hidIsReportCondiviso" />
+<input type="hidden" id="hidReportUtenteId" />
+<input type="hidden" id="hidReportUtenteNome" />
+<input type="hidden" id="hidReportUtenteCognome" />
+
+<input type="hidden" id="hidNomeCat" />
+<input type="hidden" id="hidNomeFiltro" />
+<input type="hidden" id="hidNomeDatabase" />
+<input type="hidden" id="hidIdDatabase" />
+<input type="hidden" id="hidNomeCuboDatabase" />
+<input type="hidden" id="hidServerOlapUrl" />
+
+<div class="pcoded-inner-content">
+    <div class="main-body">
+        <div class="page-wrapper">
+            <div class="page-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><span id="activeFilter">Nome Report</span></h5>
+                                <div class="card-header-right" style="z-index:99">
+                                    <div class="tool-box">
+                                        <div class="clear"></div>
+                                        <ul class="list-unstyled card-option">
+                                            <li><i class="fa fa-window-maximize full-card"></i></li>
+                                            <li><i class="fa fa-wrench open-card-option"></i></li>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-block">
+                                <div class="p-10 z-depth-bottom-2">
+                                    @*@if (Request.IsAuthenticated)
+        {
+            <div class="fim-dropdown">
+                <label><i class="fa fa-database"></i></label>
+                <div class="inner">
+                    <ul><li>Connection 1</li><li>Connection 2</li><li>Connection 3</li></ul>
+                </div>
+            </div>
+        }*@
+
+                                    <div class="fim-dropdown" data-toggle="tooltip" title="Salva la ricerca" data-delay="1000">
+                                        <span data-toggle="modal" data-target="#Modal-overflow"><i class="fa fa-save main-toolbar-icon"></i></span>
+                                        @*<span data-toggle="modal" data-target="#Modal-overflow"><i class="fa fa-hdd-o"></i></span>*@
+                                    </div>
+
+                                    <div class="fim-dropdown" data-toggle="tooltip" title="Esporta dati in Excel" data-delay="1000">
+                                        <span><i class="ti-download main-toolbar-icon" id="iexport"></i></span>
+                                    </div>
+
+                                    <div class="fim-dropdown" data-toggle="tooltip" title="Rinizializza la ricerca" data-delay="1000">
+                                        <span><i class="ti-loop main-toolbar-icon" id="cancellaRicercaOlap"></i></span>
+                                        @*ti-reload*@
+                                    </div>
+
+                                    <div class="fim-dropdown" data-toggle="tooltip" title="Elimina il Report" data-delay="1000">
+                                        <span data-toggle="modal" data-target="#Modal-confermaEliminaReport"><i class="fa fa-trash main-toolbar-icon" id="elimina"></i></span>
+                                        @*<span data-toggle="modal" data-target="#Modal-overflow"><i class="fa fa-hdd-o"></i></span>*@
+                                    </div>
+
+                                    <div class="fim-dropdown">
+                                        <span class="divisore"><i></i></span>
+                                    </div>
+
+                                    <div class="fim-dropdown" data-toggle="tooltip" title="Griglia dati" data-delay="1000">
+                                        <span><i class="fa fa-table main-toolbar-icon" id="pulsanteMostraGrigliaPrincipale"></i></span>
+                                        @*<span><i class="fa fa-table main-toolbar-icon" id="drawgrid"></i></span>*@
+                                    </div>
+
+                                    @*<div class="fim-dropdown" data-toggle="tooltip" title="Grafico" data-delay="1000">*@
+                                    @*<span><i class="fa fa-bar-chart main-toolbar-icon" id="pulsanteMostraGrafico"></i></span>*@
+
+                                    <div class="dropdown-primary dropdown open show">
+                                        <button class="fa fa-bar-chart dropdown-toggle waves-effect waves-light" type="button"
+                                                id="pulsanteMostraGrafico" style="font-size: 26px"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"></button>
+                                        <div id="dropdownTipologiaGrafico" class="dropdown-menu" aria-labelledby="pulsanteMostraGrafico" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"
+                                             x-placement="top-start">
+                                            <a class="ti-bar-chart dropdown-item waves-light waves-effect" onclick="mostraGrafico('column')" href="#">&nbsp;Colonne</a>
+                                            <a class="ti-layout-list-post dropdown-item waves-light waves-effect" onclick="mostraGrafico('bar')" href="#">&nbsp;Barre</a>
+                                            <a class="ti-stats-up dropdown-item waves-light waves-effect" onclick="mostraGrafico('line')" href="#">&nbsp;Linee</a>
+                                            @*<a class="dropdown-item waves-light waves-effect" onclick="mostraGrafico('scatter')" href="#">Dispersione</a>*@
+                                            <a class="ti-pie-chart dropdown-item waves-light waves-effect" onclick="mostraGrafico('pie')" href="#">&nbsp;Torta</a>
+                                            <a class="fa fa-area-chart dropdown-item waves-light waves-effect" onclick="mostraGrafico('area')" href="#">&nbsp;Area</a>
+                                        </div>
+                                    </div>
+
+                                    @*<span><i class="fa fa-line-chart main-toolbar-icon" id="drawgraph"></i></span>*@
+                                    @*</div>*@
+
+                                    @*<div class="fim-dropdown">
+            <span class="divisore"><i></i></span>
+        </div>*@
+                                </div>
+                                <div id="divContenitorePivotGrid">
+                                    @*<div id="example">*@
+                                    <!--  Impostazione grafica, pivot-grid -->
+                                    @*Icona loading*@
+                                    <div id="pivotGridLoading" class="k-loading-mask" style="width: 100%; height: 100%; top: 0px; left: 0px; display:none">
+                                        <span class="k-loading-text"></span>
+                                        <div class="k-loading-image">
+                                        </div>
+                                        <div class="k-loading-color">
+                                        </div>
+                                    </div>
+
+                                    @*<div id="pivotgrid" class="hidden-on-narrow">*@
+                                    <div id="pivotgrid" class="hidden-on-narrow" style="height: 100%;">
+                                    </div>
+
+                                    @*<div id="pivotgrid" class="hidden-on-narrow" style="height: 100%; font-size: 1.4em;">
+        </div>*@
+
+                                    <div class="responsive-message"></div>
+                                    <br />
+                                    <!--  Impostazione grafica, chart -->
+                                    @*<div id="chart"></div>*@
+
+                                    <!-- //# var value = kendo.toString(kendo.parseFloat(dataItem.value) ||| "N/A", "n2"); # -->
+                                    @*# var value = kendo.toString(kendo.parseFloat(dataItem.value), "n0"); #*@
+                                    @*<em style="color: red">#: value ? kendo.toString(kendo.parseFloat(value), "n0") : "N/A" # </em>*@
+
+                                    <script id="dataCellTemplate" type="text/x-kendo-tmpl">
+                                        @*columnMember è un oggetto che permette di identificare la colonna che contiene il dato*@
+                                        # var columnMember = columnTuple ? columnTuple.members[0] : { children: [] }; #
+
+                                        @*rowMember è un oggetto che permette di identificare la riga che contiene il dato*@
+                                        # var rowMember = rowTuple ? rowTuple.members[0] : { children: [] }; #
+
+                                        @*cellValue è il valore di una qualunque cella della pivot grid, dato o riepilogo. Normalmente se il valore non e' presente viene reseituito il valore stringa vuota *@
+                                        # var cellValue = dataItem.value; #
+                                        # var value = (cellValue=="" || cellValue == null || cellValue == undefined)? "0": kendo.toString(kendo.parseFloat(dataItem.value), "n0"); #
+
+                                        # if (columnMember.children.length || rowMember.children.length) { #
+                                        #: value ? kendo.toString(kendo.parseFloat(value), "n0") : "0" #
+                                        # } else { #
+                                        #: value #
+                                        # } #
+                                    </script>
+                                    <script id="headerTemplate" type="text/x-kendo-tmpl">
+                                        # impostaColonneRicercaPivotGridSuUnaRiga(); #
+                                        # if (!member.children.length) { #
+                                        <em>#: member.caption #</em>
+                                        # } else { #
+                                        #: member.caption #
+                                        # } #
+                                    </script>
+
+                                    @*Originale:*@
+                                    @*<script id="dataCellTemplate" type="text/x-kendo-tmpl">
+            # var columnMember = columnTuple ? columnTuple.members[0] : { children: [] }; #
+            # var rowMember = rowTuple ? rowTuple.members[0] : { children: [] }; #
+
+            # var value = kendo.toString(kendo.parseFloat(dataItem.value), "n0"); #
+
+            # if (columnMember.children.length || rowMember.children.length) { #
+            #: value ? kendo.toString(kendo.parseFloat(value), "n0") : "N/A" #
+            # } else { #
+            #: value #
+            # } #
+        </script>
+        <script id="headerTemplate" type="text/x-kendo-tmpl">
+            # if (!member.children.length) { #
+            <em>#: member.caption #</em>
+            # } else { #
+            #: member.caption #
+            # } #
+        </script>*@
+
+                                    @*# var value = new Intl.NumberFormat('it-IT', { maximumSignificantDigits: 15 }).format(dataItem.value); #*@
+
+                                    @*Originale meno recente:*@
+                                    @*<script id="dataCellTemplate" type="text/x-kendo-tmpl">
+            # var columnMember = columnTuple ? columnTuple.members[0] : { children: [] }; #
+            # var rowMember = rowTuple ? rowTuple.members[0] : { children: [] }; #
+
+            # var value = kendo.toString(kendo.parseFloat(dataItem.value), "n0"); #
+
+            # if (columnMember.children.length || rowMember.children.length) { #
+            <em style="color: red">#: value ? kendo.toString(kendo.parseFloat(value), "n0") : "N/A" # </em>
+            # } else { #
+            #: value #
+            # } #
+        </script>
+        <script id="headerTemplate" type="text/x-kendo-tmpl">
+            # if (!member.children.length) { #
+            <em>#: member.caption #</em>
+            # } else { #
+            #: member.caption #
+            # } #
+        </script>*@
+
+                                    <!-- TEMPLATE DEL TOOLTIP  -------------------------------------------------------------------->
+                                    <script id="template" type="text/x-kendo-template">
+                                        <div>
+                                            <div>Rows: #:rowText#</div>
+                                            <div>Columns: #:columnText#</div>
+                                            <div>Value: #:value ? kendo.toString(kendo.parseFloat(value), "n0") : "0" #</div>
+                                            @*Originale: <div>Value: #:value ? kendo.toString(kendo.parseFloat(value), "n0") : "N/A" #<*@
+                                        </div>
+                                    </script>
+                                    <!--------------------------------------------------------------------------------------------->
+                                    <script type="text/javascript">kendo.culture("it-IT");</script>
+
+                                    <!--  Ex Script -->
+
+                                    <style>
+                                        #pivotgrid {
+                                            display: inline-block;
+                                            vertical-align: top;
+                                            width: 100%;
+                                            margin: 5px;
+                                            height: 100% /*400px;*/
+                                        }
+
+                                        /*********************** SECONDA PIVOT GRID  *************************/
+                                        /*#pivotgrid2 {
+                                            display: inline-block;
+                                            vertical-align: top;
+                                            width: 100%;
+                                            margin: 5px;
+                                            height: 200px;
+                                        }*/
+                                        /*********************** FINE SECONDA PIVOT GRID  *************************/
+
+                                        #configurator {
+                                            display: inline-block;
+                                            vertical-align: top;
+                                            width: 100%;
+                                            margin: 1px;
+                                            height: 100%;
+                                            /*max-height: 450px;*/
+                                            /*overflow-y: scroll;
+                                            overflow-x: auto;*/
+                                        }
+
+                                        #chart {
+                                            display: inline-block;
+                                            vertical-align: top;
+                                            width: 100%;
+                                            margin: 1px;
+                                        }
+                                    </style>
+                                </div>
+                                <!--<div id="chart" style="width:100%"></div>-->
+                                <div class="chart-wrap" style="position: relative;">
+                                    <div id="chart" style="width:100%" class="pivotChart"></div>
+                                    <div class="chart-loading"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!--   TAB DEL GRAFICO  -->
+                @*<div class="row hidden" id="div_chart">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-header-right">
+                                    <div class="card-header-right">
+                                        <div class="tool-box">
+                                            <div class="clear"></div>
+                                            <ul class="list-unstyled card-option">
+                                                <li><i class="fa fa-window-maximize full-card"></i></li>
+                                                <li><i class="fa fa-wrench open-card-option"></i></li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-block">
+                                    <div class="p-10 z-depth-bottom-2">
+                                        <!--<div id="chart" style="width:100%"></div>-->
+                    <div class="chart-wrap" style="position: relative;">
+                            <div id="chart" style="width:100%"></div>
+                            <div class="chart-loading"></div>
+                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL SALVATAGGIO FILTRO -->
+<div class="modal modal-flex" id="Modal-overflow" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body model-container no-padding">
+                <div class="overflow-container" id="containerSalvataggioFiltro">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Gestisci il report corrente</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+
+                        <div class="card-block">
+                            <form>
+                                <div class="row form-group">
+                                    <div class="col-sm-12 col-xl-4 m-b-30">
+                                        <input type="checkbox" class="js-single js-check-click" id="chkSovrascrivi" data-switchery="true">
+                                        <label for="chkSovrascrivi">Sovrascrivi il report corrente</label>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Nome del report</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" maxlength="100" id="nomeFiltro">
+                                        <br />
+
+
+                                        @*<div class="border-checkbox-group border-checkbox-group-primary">*@
+                                        @*<span class="sub-title">*@
+                                        <span id="areaCondivisione" class="sub-title">
+                                            Area Condivisione
+                                            <input class="border-checkbox" type="checkbox" id="checkboxCondividi">
+                                        </span>
+                                        <label class="border-checkbox-label" for="checkboxCondividi"></label>
+                                        <div id="divCondivisione">
+                                            <span>Invia a:</span>
+                                            <select class="js-example-basic-multiple" id="select2CondivisioneReportListaUtenti" name="states[]" multiple="multiple">
+                                                @*<option value="IdPiero">Piero</option>*@
+                                            </select>
+                                        </div>
+                                        @*</div>*@
+
+
+
+
+                                        <br />
+
+                                        @*<span class="float-left"><input type="button" class="btn btn-danger btn-sm" value="ELIMINA" id="elimina" /></span>*@
+                                        <span class="float-right">
+                                            <input type="button" class="btn btn-primary btn-sm" value="SALVA" id="save" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CONFERMA ELIMINAZIONE REPORT -->
+<div class="modal modal-flex" id="Modal-confermaEliminaReport" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body model-container no-padding">
+                <div class="overflow-container" id="containerSalvataggioFiltro">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Conferma elimina Report</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+
+                        <div class="card-block">
+                            <form>
+                                @*<div class="row form-group">
+                                        <div class="col-sm-12 col-xl-4 m-b-30">
+                                            <input type="checkbox" class="js-single js-check-click" id="chkSovrascrivi" data-switchery="true">
+                                            <label for="chkSovrascrivi">Sovrascrivi il report corrente</label>
+                                        </div>
+                                    </div>*@
+                                <div class="row form-group">
+                                    <div class="col-sm-1">
+                                        @*<label class="col-form-label">Icona elimina</label>*@
+                                        <i class='fa fa-exclamation-triangle' style="font-size:40px"></i>
+                                    </div>
+                                    <div class="col-sm-11">
+                                        <h4>Sicuro di voler eliminare il Report?</h4>
+                                        <br />
+
+                                        <br />
+
+                                        <span class="float-right">
+                                            <input type="button" class="btn btn-primary btn-sm" value="ELIMINA" id="btnConfermaEliminaReport" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL SECONDA PIVOT  EX DRILL THROUGH, NON UTILIZZATA-->
+<div class="modal md-modal md-effect-2" id="modal-2">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body model-container">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 id="titDrill"></h3>
+                <div>
+                    <!--  SECONDA PIVOT GRID  -->
+                    <div id="pivotgrid2" class="hidden-on-narrow"></div>
+                    <!--  FINE SECONDA PIVOT GRID  -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FINESTRA MODALE DRILL THROUGHT - SOSTITUISCE MODAL SECONDA PIVOT -->
+<div class="modal md-modal md-effect-2" id="drillThroughModalId">
+    <div class="modal-dialog modal-lg" role="document" style="max-width: 80%;">
+        <div class="modal-content">
+            <div class="modal-body model-container" style="padding: 0px">
+                <div class="card">
+                    <div class="card-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 id="drillThroughTitoloId"></h4>
+                        <h5 id="drillThroughRiepilogoId"></h5>
+                    </div>
+                    <div class="card-block">
+                        <div id="drillThroughDivPrincipale" class="dt-responsive table-responsive">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- END - CONTENT MAIN PAGE INNER -->
+@section scripts
+{
+    <script>
+// window.kendoTheme = "default-v2";
+//    window.kendoCommonFile = "common-empty";
+
+
+//$(window).on("load", function () {
+
+//var $divSelectorToggle = $('.selector-toggle');
+//var $divFontHeader = $('h5.font-header');
+
+//if ($divSelectorToggle.length > 1) {
+//   $divSelectorToggle.not(':first').remove()
+//}
+
+//if ($divFontHeader.length > 1) {
+//   $divFontHeader.not(':first').remove()
+//}
+
+//});
+
+//$(window).on("resize", function () {
+//    	//$("#chart").data("kendoChart").refresh();
+//	kendo.resize($(".k-chart"));
+//});
+    </script>
+}

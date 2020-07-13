@@ -1,0 +1,44 @@
+﻿@using nGenie.WebAnalysis.Application.Common
+
+<div class="pcoded-inner-content">
+    <div class="main-body">
+        <div class="page-wrapper">
+            <div class="page-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><span id="sottotitolo">@ViewBag.Sottotitolo</span></h5>
+                                <div class="card-header-right" style="z-index:99">
+                                    <div class="tool-box">
+                                        <div class="clear"></div>
+                                        <ul class="list-unstyled card-option"></ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-block">
+                                @RenderSection("Content", required: false)
+                            </div>
+
+                            @{
+                                @*Mostra all'utente un messaggio di errore se presente in TempData*@
+                                Object tempDataErrorMessage = TempData[Costanti.KEY_ERROR_MESSAGE];
+                                if (tempDataErrorMessage != null)
+                                {
+                                    string errorMessage = (string)tempDataErrorMessage;
+                                    if (!string.IsNullOrEmpty(errorMessage))
+                                    {
+                                        <script>
+                                            showTooltipError("@errorMessage");
+                                        </script>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

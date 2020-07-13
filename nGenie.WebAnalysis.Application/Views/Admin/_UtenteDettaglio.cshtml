@@ -1,0 +1,44 @@
+﻿@model nGenie.WebAnalysis.Application.Utente
+
+@{
+    Layout = "~/Views/Shared/_Content.cshtml";
+
+    string getSelectedFromRuoloId(int n)
+    {
+        return Model.RuoloId == n ?
+            "selected"
+            : "";
+    }
+
+    string disableValue = Model.PkUtenteId > 0 ? "disabled" : "";
+}
+
+@section Content
+{
+    <input type="hidden" id="PkUtenteId" name="PkUtenteId" value="@Model.PkUtenteId.ToString()">
+    <input type="hidden" id="Abilitato" name="Abilitato" value="@Model.Abilitato.ToString().ToLower()">
+
+    <table id="tableUtenteDettaglio" class="table" cellspacing="0">
+        <tbody>
+            <tr>
+                <td>@Html.LabelFor(model => model.Username)</td>
+                <td><input type="text" id="Username" value="@Model.Username" @disableValue></td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(model => model.RuoloId, "Ruolo")</td>
+                <td>
+                    <select id="Ruolo" name="Ruolo">
+                        <option value="1" @getSelectedFromRuoloId(1)>Amministratore</option>
+                        <option value="2" @getSelectedFromRuoloId(2)>Utente</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <div>
+        <input type="button" value="Annulla" onclick="caricaListaUtenti()">
+        <input type="button" value="Salva" onclick="inserisciModificaUtente()">
+    </div>
+}
+

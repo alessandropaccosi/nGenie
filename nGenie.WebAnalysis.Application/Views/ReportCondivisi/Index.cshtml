@@ -1,0 +1,285 @@
+﻿@model  nGenie.WebAnalysis.Application.Models.ReportCondivisiIndex
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutReportCondivisi.cshtml";
+
+    string toDatetimeString(DateTime dateTime)
+    {
+        return dateTime.ToString("dd/MM/yyyy HH:mm:ss");
+    }
+
+    string getShortReportName(string nomeReport)
+    {
+        const int MAX_LENGTH = 22;
+        return nomeReport.Length > MAX_LENGTH ?
+            string.Format("{0}...", nomeReport.Substring(0, MAX_LENGTH))
+            : nomeReport;
+    }
+
+    string getReportTooltip(string nomeReport)
+    {
+        string result = "";
+        if (getShortReportName(nomeReport) != nomeReport)
+            result = nomeReport;
+
+        return result;
+    }
+}
+
+
+@section CustomHeaderSection
+{
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/plugins/switchery/css/switchery.min.css">
+}
+
+@section CustomJs
+{
+
+    @Scripts.Render("~/modal-js")
+    @Scripts.Render("~/classie-js")
+    @Scripts.Render("~/modalEffects-js")
+    @Scripts.Render("~/switchery-js")
+    @Scripts.Render("~/analysis-toolbar-js")
+    @Scripts.Render("~/xdr-js")
+    @Scripts.Render("~/jszip-js")
+    @Scripts.Render("~/jquery-base64-js")
+    @Scripts.Render("~/xml2json-js")
+
+    @Scripts.Render("~/ui-common-js")
+    @*@Scripts.Render("~/ui-admin-js")*@
+    @*<script src="~/Content/assets/js/ui-common.js"></script>
+        <script src="~/Content/assets/js/ui-admin.js"></script>*@
+}
+
+@section CustomCssSection
+{
+    @*Istruzioni necessarie per allineare a sinistra il contenuto della pagina*@
+    <style type="text/css">
+        .pcoded[theme-layout=vertical][vertical-placement=left][vertical-nav-type=expanded][vertical-effect=shrink] .pcoded-content {
+            margin-left: 0 !important;
+        }
+
+        .col-auto h6 {
+            font-size: 1.5em !important;
+        }
+    </style>
+}
+
+@*Serve per riportare l'header della pagina, ad esempio il titolo*@
+@Html.Partial("~/Views/Shared/_pageheader.cshtml")
+
+<div id="pageContent">
+    <div class="reportCondivisoItems">
+        <div class="card">
+            <div class="card-header">
+                <h5>Report inviati: @Model.ReportInviati.Length.ToString()</h5>
+            </div>
+
+            @if (Model.ReportInviati.Length > 0)
+            {
+                <div id="divTableZeroConfigurationCard">
+                    <table id="tableZeroConfigurationReportInviati" class="display">
+                        <thead>
+                            <tr>
+                                <th>
+                                </th>
+
+                                <th>
+                                </th>
+
+                                <th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @for (int i = 0; i < Model.ReportInviati.Length; i += 3)
+                            {
+                                <tr>
+                                    @for (int j = 0; j < 3; j++)
+                                    {
+                                        if (i + j < Model.ReportInviati.Length)
+                                        {
+                                            <td>
+                                                <div>
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            @*Serve per permettere la ricerca su tutto il nome del campo*@
+                                                            <span hidden="hidden">@Model.ReportInviati[i + j].ReportCondiviso.Nome</span>
+
+                                                            <span data-toggle="tooltip" title="@getReportTooltip(Model.ReportInviati[i + j].ReportCondiviso.Nome)"
+                                                                  class="card-title">@getShortReportName(Model.ReportInviati[i + j].ReportCondiviso.Nome)
+                                                            </span>
+
+                                                            <p class="card-text">
+                                                                @String.Format("Inviato il {0}", toDatetimeString(Model.ReportInviati[i + j].Report.DataUltimaModifica))
+                                                                <br />
+                                                                Cubo: @Model.ReportInviati[i + j].Cubo.NomeCategoria
+                                                            </p>
+                                                            <a href="/Analysis/IndexReportId/@Model.ReportInviati[i + j].Report.PKFiltroId" class="btn btn-primary">Apri</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            </div>
+    </div>
+
+
+
+    <div class="reportCondivisoItems">
+        <div class="card">
+            <div class="card-header">
+                <h5>Report Ricevuti: @Model.ReportRicevuti.Length.ToString()</h5>
+            </div>
+
+            @if (Model.ReportRicevuti.Length > 0)
+            {
+                <div id="divTableZeroConfigurationCard">
+                    <table id="tableZeroConfigurationReportRicevuti" class="display">
+                        <thead>
+                            <tr>
+                                <th>
+                                </th>
+
+                                <th>
+                                </th>
+
+                                <th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.ReportRicevuti.Length; i += 3)
+                            {
+                                <tr>
+                                    @for (int j = 0; j < 3; j++)
+                                    {
+                                        if (i + j < Model.ReportRicevuti.Length)
+                                        {
+                                            <td>
+                                                <div>
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            @*Serve per permettere la ricerca su tutto il nome del campo*@
+                                                            <span hidden="hidden">@Model.ReportRicevuti[i + j].ReportCondiviso.Nome</span>
+
+                                                            <span data-toggle="tooltip" title="@getReportTooltip(Model.ReportRicevuti[i + j].ReportCondiviso.Nome)"
+                                                                  class="card-title">
+                                                                @getShortReportName(Model.ReportRicevuti[i + j].ReportCondiviso.Nome)
+                                                            </span>
+
+                                                            <p class="card-text">
+                                                                @String.Format("Ricevuto il {0}", toDatetimeString(Model.ReportRicevuti[i + j].Report.DataUltimaModifica))
+                                                                <br />
+                                                                Cubo: @Model.ReportRicevuti[i + j].Cubo.NomeCategoria
+                                                            </p>
+                                                            <a href="/Analysis/IndexReportId/@Model.ReportRicevuti[i + j].Report.PKFiltroId" class="btn btn-primary">Apri</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    $(window).on('load', function () {
+        $('.mobile-menu').hide();
+    });
+
+    $(document).ready(function () {
+        reloadPageIfRequired();
+        formattaTabellaZeroConfiguration('tableZeroConfigurationReportInviati');
+        formattaTabellaZeroConfiguration('tableZeroConfigurationReportRicevuti');
+    });
+
+    //Funzione da chiamare per mostrare una specifica tabella drill through
+    function formattaTabellaZeroConfiguration(nomeTabella) {
+        //$("#divTableZeroConfigurationCard").append($("#divTableZeroConfigurationCard"));
+
+    //$.fn.dataTable.ext.search.push(
+    //    function (settings, data, dataIndex) {
+    //        return false;
+    //    }
+    //);
+
+        //getById(nomeTabella).DataTable.ext.search.push(
+        //    function (settings, data, dataIndex) {
+        //        return false;
+        //    }
+        //);
+
+        //getById(nomeTabella).DataTable.search
+
+        //Formatta la tabella utilizzando un plugin.
+        getById(nomeTabella).DataTable({
+
+            //"info": false,
+
+            //Richiede di non ordinare, altrimenti sembra che ordina in base alla prima colonna
+            "order": [],
+
+            //Nasconde gli indicatori per effettuare l'ordinamento
+            "ordering": false,
+
+            //Imposta il numero di record per pagina
+            "lengthMenu": [[3], [3]],
+
+            //Rende non visibile la selezione del numero di record da visualizzare nella pagina
+            "lengthChange": false,
+
+            "language": {
+                "lengthMenu": "Mostra _MENU_ record per pagina"
+                , "zeroRecords": "Nessun record trovato"
+                , "info": "Pagina _PAGE_ di _PAGES_"
+                , "infoEmpty": "Nessun record disponibile"
+                , "infoFiltered": "(filtrati da _MAX_ record totali)"
+                , "search": 'Ricerca:'
+                , "paginate": {
+                    "first": "Inizio",
+                    "last": "Ultimo",
+                    "next": "Successivo",
+                    "previous": "Precedente"
+                },
+            }
+        });
+    }
+
+    //$.fn.dataTable.ext.search.push(
+    //    function (settings, data, dataIndex) {
+    //        return false;
+    //    }
+    //);
+
+</script>
+
+
+
+
+

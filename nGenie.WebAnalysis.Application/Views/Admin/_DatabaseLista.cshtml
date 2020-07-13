@@ -1,0 +1,67 @@
+﻿
+@model IEnumerable<nGenie.WebAnalysis.Application.Models.DbModel.DatabaseOlap>
+
+@{
+    Layout = "~/Views/Shared/_Content.cshtml";
+}
+
+@section Content
+{
+    <div id="divTableZeroConfiguration">
+        <a href="#" class="btn btn-primary btn-sm" onclick="caricaVistaParziale('@Url.Action("PartialViewInserisciModificaDatabase")')">Nuovo</a>
+
+        <table id="tableZeroConfiguration" class="display" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>
+                        Database
+                    </th>
+
+                    <th>
+                        Server
+                    </th>
+
+                    <th>
+                        Opzioni
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Nome
+                        </td>
+                        <td>
+                            @item.ServerOlap.Nome
+                        </td>
+                        <td>
+
+                            @{
+                                string url = string.Format("{0}/{1}",
+                                        Url.Action("PartialViewInserisciModificaDatabase", "Admin"),
+                                        item.Id);
+
+                                string abilitazioneParameter = string.Format("{0}",
+                                        item.Id);
+
+                                string abilitazioneTextValue = item.Attivo ? "Disabilita" : "Abilita";
+                                string abilitazioneClasse = item.Attivo ? "abilitato" : "disabilitato";
+                            }
+                            <a href="#" onclick="javascript:caricaVistaParziale('@url');">Modifica</a>
+                            |
+                            <a id="@item.Id"
+                               class="@abilitazioneClasse"
+                               data-abilitato="@item.Attivo.ToString().ToLower()"
+                               href="#"
+                               onclick="abilitaDisabilitaDatabase(@abilitazioneParameter)">
+                                @abilitazioneTextValue
+                            </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

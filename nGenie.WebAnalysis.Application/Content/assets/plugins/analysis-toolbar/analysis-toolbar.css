@@ -1,0 +1,211 @@
+﻿
+*,
+*:before,
+*:after {
+    padding: 0;
+    margin: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+.fim-dropdown {
+    display: inline-block;
+    vertical-align: middle
+}
+
+    .fim-dropdown > span {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        font-size: 20px;
+        -webkit-transition: all .2s;
+        transition: all .2s;
+        padding: 0 10px;
+        color: #c5c5c5
+    }
+
+    .fim-dropdown > span > i{
+        font-size: 20px;
+        margin-bottom:11px;
+    }
+
+        .fim-dropdown > span:hover {
+            color: #151515
+        }
+
+        .fim-dropdown > span:after {
+            content: "";
+            display: block;
+            width: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 15px solid #c4c4c4;
+            position: absolute;
+            bottom: -15px;
+            left: 3.5px;
+            visibility: hidden
+        }
+    .fim-dropdown > label {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        font-size: 20px;
+        -webkit-transition: all .2s;
+        transition: all .2s;
+        padding: 0 10px;
+        color: #c5c5c5
+    }
+
+        .fim-dropdown > label:hover {
+            color: #151515
+        }
+
+        .fim-dropdown > label:after {
+            content: "";
+            display: block;
+            width: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 15px solid #c4c4c4;
+            position: absolute;
+            bottom: -15px;
+            left: 3.5px;
+            visibility: hidden
+        }
+
+    .fim-dropdown > input {
+        display: none
+    }
+
+    .fim-dropdown.active > label {
+        color: #202020
+    }
+
+        .fim-dropdown.active > label:after {
+            visibility: visible
+        }
+
+    .fim-dropdown > .inner {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        position: fixed;
+        width: 400px;
+        padding: 20px;
+        background: white;
+        -webkit-box-shadow: 0px 0px 2px 1px #c4c4c4;
+        box-shadow: 0px 0px 2px 1px #c4c4c4;
+        border: 1px solid #c4c4c4;
+        visibility: hidden;
+        margin-top: 15px;
+        text-align: center;
+        z-index: 999;
+    }
+
+    .fim-dropdown.active .inner {
+        visibility: visible
+    }
+
+textarea {
+    width: 100%;
+    height: 100px;
+    resize: none;
+    font-size: 15px;
+    border: none;
+    -webkit-box-shadow: inset 0px 1px 1px 1px rgba(0,0,0,0.1);
+    box-shadow: inset 0px 1px 1px 1px rgba(0,0,0,0.1);
+    padding: 20px
+}
+
+    textarea:focus {
+        outline: none;
+        -webkit-box-shadow: inset 0px 1px 1px 1px rgba(0,0,0,0.3);
+        box-shadow: inset 0px 1px 1px 1px rgba(0,0,0,0.3)
+    }
+
+h1,
+h2,
+h3,
+h4 {
+    font-weight: 400
+}
+
+.share_type {
+    text-align: left;
+    padding: 10px 10px
+}
+
+    .share_type .fa {
+        font-size: 20px
+    }
+
+    .share_type > span {
+        margin: 0 8px;
+        cursor: pointer
+    }
+
+        .share_type > span small {
+            font-weight: 700;
+            font-size: 12px;
+            color: #525252
+        }
+
+            .share_type > span small:hover {
+                color: #313131
+            }
+
+.fim-blue {
+    color: #1F75FE
+}
+
+.fim-yellow {
+    color: #efe74c
+}
+
+.fim-green {
+    color: #2acd4a
+}
+
+.fim-gray {
+    color: #a2a2a2
+}
+
+span,
+small,
+i {
+    display: inline-block;
+    vertical-align: middle
+}
+
+section {
+    padding-top: 20px;
+    width: 600px;
+    margin: auto
+}
+
+code.hljs {
+    background: white;
+    display: block;
+    overflow: auto;
+    padding: 10px;
+    font-size: 15px;
+    color: #202020;
+    font-family: monospace;
+    -webkit-box-shadow: 0px 0px 1px 1px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 1px 1px rgba(0,0,0,0.1)
+}
+
+.hljs-tag .hljs-value {
+    color: #41c74a !important
+}
+
+

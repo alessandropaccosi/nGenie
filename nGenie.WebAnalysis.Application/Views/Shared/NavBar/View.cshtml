@@ -1,0 +1,51 @@
+﻿@model nGenie.WebAnalysis.Application.Controllers.AnalysisUtente
+
+@*<p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+    </table>*@
+
+<ul class="pcoded-submenu">
+    @foreach (var item in Model)
+    {
+        <li class="pcoded-hasmenu">
+            <a href="javascript:void(0)" class="waves-effect waves-dark">
+                <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
+                <span class="pcoded-mtext">@Html.DisplayFor(modelItem => item.Nome) </span>
+
+                <span class="pcoded-mcaret"></span>
+            </a>
+            <ul class="pcoded-submenu">
+                @foreach (var subitm in item.Filtri)
+                {
+                    <li class="">
+                        <a href="#" class="waves-effect waves-dark">
+                            <span class="pcoded-mtext">@Html.DisplayFor(modelItem => subitm.Nome)</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>    
+    }
+</ul>

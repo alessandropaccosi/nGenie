@@ -1,0 +1,33 @@
+﻿@model IEnumerable<nGenie.WebAnalysis.Application.Models.DbModel.DatabaseOlap>
+@{
+    Layout = "~/Views/Shared/_Content.cshtml";
+
+    //Calcola l'identificatore del database eventualmente da selezionare
+    int databaseIdDaSelezionare = 0;
+    if (ViewBag.DatabaseId != null)
+    {
+        databaseIdDaSelezionare = ViewBag.DatabaseId;
+    }
+}
+
+@section Content
+    {
+
+
+    <label for="selectDatabase">Database:</label>
+    <select id="selectDatabase" name="selectDatabase" onchange="caricaCubi(this.value);">
+        <option value="0">Selezionare un database</option>
+
+        @foreach (var item in Model)
+        {
+            //Valorizza la stringa con selected nel caso il database sia da selezionare
+            string selectedValue = item.Id == databaseIdDaSelezionare ? "selected" : "";
+
+            <option value="@item.Id" @selectedValue>@item.Nome</option>
+        }
+    </select>
+    <br />
+    @*Il seguente div viene utilizzato per riportare i cubi appartenenti al database sopra selezionato*@
+    <div id="pageContent02" />
+}
+

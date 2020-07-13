@@ -1,0 +1,97 @@
+﻿@using nGenie.WebAnalysis.Application.Models
+@*@model LoginViewModel*@
+@model LoginInfoViewModel
+@{
+    /**/
+
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+@section CustomCssSection{
+
+    <style>
+        body[themebg-pattern=theme1] {
+            background: radial-gradient(at 50% -20%, #1967a9, #0a1832) fixed !important;
+            background-color: #0 !important;
+        }
+    </style>
+
+}
+
+@*<h2>@ViewBag.Title.</h2>*@
+
+<section class="login-block">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "md-float-material form-material", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="text-center">
+                        <img src="~/Content/assets/images/logos/tim-logo-whiteX50.png" alt="TIM - Process Monitoring Portal" height="50">
+                    </div>
+
+                    <div class="auth-box card">
+                        <div class="card-block">
+                            <div class="row m-b-20">
+                                <div class="col-md-12">
+                                    <h3 class="text-center">Log In</h3>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <br/>
+                                </div>
+                            </div>
+                            <div class="form-group form-primary">
+                                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @required = "" })
+                                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                                <span class="form-bar"></span>
+                                @Html.LabelFor(m => m.UserName, new { @class = "float-label" })
+                            </div>
+                            <div class="form-group form-primary">
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control", @required = "" })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                                <span class="form-bar"></span>
+                                @Html.LabelFor(m => m.Password, new { @class = "float-label" })
+                            </div>
+                            @*<div class="row m-t-25 text-left">
+                                <div class="col-12">
+                                    <div class="checkbox-fade fade-in-primary d-">
+                                        <label>
+                                            <input type="checkbox" value="">
+                                            
+                                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                            <span class="text-inverse">Remember me</span>
+                                        </label>
+                                    </div>
+                                    <div class="forgot-phone text-right f-right">
+                                        
+                                        @Html.ActionLink("Forgot your password?", "ForgotPassword", "", new { @class = "text-right f-w-600" })
+                                    </div>
+                                </div>
+                            </div>*@
+                            <div class="row m-t-30">
+                                <div class="col-md-12">
+                                    @*<button type="button" class="btn btn-primary btn-md btn-block waves-effect waves-light text-center m-b-20">Sign in</button>*@
+                                    <input type="submit" value="Log in" class="btn btn-primary btn-md btn-block waves-effect waves-light text-center m-b-20" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }*@

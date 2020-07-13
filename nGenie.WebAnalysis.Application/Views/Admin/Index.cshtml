@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+@section CustomHeaderSection
+{
+
+    <!--  ANALYSIS TOOLBAR PLUGIN -->
+    @*@Styles.Render("~/analysis-toolbar-css")*@
+
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/plugins/switchery/css/switchery.min.css">
+
+    <!-- BEGIN CSS CORE PLUGINS -->
+    @*@Styles.Render("~/kendo-examples-css")
+        @Styles.Render("~/kendo-common-css")
+        @Styles.Render("~/kendo-rtl-css")
+        @Styles.Render("~/kendo-color-css")*@
+
+    <!-- BEGIN JS CORE PLUGINS -->
+    @*@Scripts.Render("~/kendo-all-js")
+        @Scripts.Render("~/kendo-culture-js")
+        @Scripts.Render("~/kendo-messages-js")
+        @Scripts.Render("~/kendo-console-js")*@
+}
+
+@section CustomJs
+{
+
+    @Scripts.Render("~/modal-js")
+    @Scripts.Render("~/classie-js")
+    @Scripts.Render("~/modalEffects-js")
+    @Scripts.Render("~/switchery-js")
+    @Scripts.Render("~/analysis-toolbar-js")
+    @Scripts.Render("~/xdr-js")
+    @Scripts.Render("~/jszip-js")
+    @Scripts.Render("~/jquery-base64-js")
+    @Scripts.Render("~/xml2json-js")
+
+    @Scripts.Render("~/ui-common-js")
+    @Scripts.Render("~/ui-admin-js")
+    @*<script src="~/Content/assets/js/ui-common.js"></script>
+    <script src="~/Content/assets/js/ui-admin.js"></script>*@
+}
+
+@section CustomCssSection
+{
+
+    <style type="text/css">
+        .mini-stat-info span {
+            display: block;
+            font-size: inherit !important;
+        }
+
+        .nav-tabs-custom .nav-item .nav-link {
+            font-size: 16px;
+        }
+
+        .table > tbody > tr > td, .table > tfoot > tr > td, .table > thead > tr > td {
+            padding: 0px !important;
+        }
+
+        .btn-group .btn-secondary {
+            height: 35px;
+            font-size: 12px;
+        }
+    </style>
+}
+
+@Html.Partial("~/Views/Shared/_pageheader.cshtml")
+
+<div id="pageContent">
+    @{
+        Html.RenderAction("PartialViewGestioneUtenti");
+    }
+</div>
+
+
+
+
+
