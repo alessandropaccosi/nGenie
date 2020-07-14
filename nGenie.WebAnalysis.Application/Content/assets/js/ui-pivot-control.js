@@ -676,7 +676,7 @@ function ImpostaPivot(nomefiltro, nomecolonne, nomerighe, nomemisure, id, idcat,
                     //Salva il treeview nella variabile globale
                     treeviewCampiDaIncludere = treeView;
 
-                    treeviewCampiDaIncludere.setOptions({ loadOnDemand: false }); 
+                    treeviewCampiDaIncludere.setOptions({ loadOnDemand: false }); //test commit
 
                     var pippo = treeviewCampiDaIncludere.dataItem(treeviewCampiDaIncludere.findByText("[Date].[Calendar].[Date].&[20060101]"));
                     treeviewCampiDaIncludere.expandTo(pippo);
