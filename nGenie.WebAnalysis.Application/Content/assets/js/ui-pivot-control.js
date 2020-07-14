@@ -664,67 +664,77 @@ function ImpostaPivot(nomefiltro, nomecolonne, nomerighe, nomemisure, id, idcat,
     //Codice necessario per intercettare quando la finestra popup Includi Campi della pivot grid viene aperta
     //in modo da effettuare alcune operazioni per correggere un problema.
     //In particolare la finestra non visualizza correttamente le precedenti scelte effettuate dall'utente
-    //$('[data-role="pivotsettingtarget"]').each(function (indice, setting) {
-    //    var fieldMenu = $(setting).data("kendoPivotSettingTarget").fieldMenu; //get setting FieldMenu
-    //    if (fieldMenu) {
-    //        fieldMenu.includeWindow.bind("open", function () {
-    //            var treeView = fieldMenu.treeView;
-    //            if (treeView) {
-    //                //Salva il treeview nella variabile globale
-    //                treeviewCampiDaIncludere = treeView;
+    $('[data-role="pivotsettingtarget"]').each(function (indice, setting) {
+        var fieldMenu = $(setting).data("kendoPivotSettingTarget").fieldMenu; //get setting FieldMenu
+        if (fieldMenu) {
+            fieldMenu.includeWindow.bind("open", function () {
+                var treeView = fieldMenu.treeView;
 
-    //                //Disabilita la visualizzazione globale delle eccezioni. Durante il caricamento del treeview
-    //                //si possono verificare degli errori che non sembrano avere infuenza e 
-    //                //vengono nascosti all'utente
-    //                eccezioniAbilitate = false;
+                console.log('treeView:', treeView);
 
-    //                //Nasconde il treeview
-    //                treeviewCampiDaIncludere.element.hide();
-    //                //aumentaDimensioniFinestraPopupIncludiCampi();
+                if (treeView) {
+                    //Salva il treeview nella variabile globale
+                    treeviewCampiDaIncludere = treeView;
 
-    //                //Mostra un icona progress
-    //                kendo.ui.progress($('.k-window-titlebar'), true);
+                    treeviewCampiDaIncludere.setOptions({ loadOnDemand: false });
 
-    //                //Funzione chiamata dopo che il treeview ha finito di recuperare i dati
-    //                treeView.bind("dataBound", function (e) {
-    //                    try {
-    //                        //Occorre verificare se il treeview e' visibile perche' dopo la compressione del 
-    //                        //treeview la funzione corrente viene chiamata ancora una volta, non chiaro perche' 
-    //                        if (treeviewCampiDaIncludere.element.is(":hidden")) {
+                    var pippo = treeviewCampiDaIncludere.dataItem(treeviewCampiDaIncludere.findByText("[Date].[Calendar].[Date].&[20060101]"));
+                    treeviewCampiDaIncludere.expandTo(pippo);
 
-    //                            //Richiede un espansione del treeview. Per espanderlo tutto saranno necessarie
-    //                            //diverse chiamate alla funzione expand
-    //                            treeviewCampiDaIncludere.expand(".k-item");
+                    return;
 
-    //                            //Quando il treeview e' espanso tutto quanto non ci saranno piu' elementi
-    //                            //di classe k-i-expand
-    //                            if (treeviewCampiDaIncludere.element.find('span.k-i-expand').length == 0) {
+                    //Disabilita la visualizzazione globale delle eccezioni. Durante il caricamento del treeview
+                    //si possono verificare degli errori che non sembrano avere infuenza e 
+                    //vengono nascosti all'utente
+                    eccezioniAbilitate = false;
 
-    //                                //Richiede la compressione del treeview. Curiosamente dopo questa
-    //                                //richiesta si verifica un ulteriore databound come se il treeview recuperasse dati
-    //                                treeviewCampiDaIncludere.element.data("kendoTreeView").collapse(".k-item");
+                    //Nasconde il treeview
+                    treeviewCampiDaIncludere.element.hide();
+                    //aumentaDimensioniFinestraPopupIncludiCampi();
 
-    //                                //Mostra il treeview
-    //                                treeviewCampiDaIncludere.element.show();
+                    //Mostra un icona progress
+                    kendo.ui.progress($('.k-window-titlebar'), true);
 
-    //                                //Nasconde l'icona progress
-    //                                kendo.ui.progress($('.k-window-titlebar'), false);
+                    //Funzione chiamata dopo che il treeview ha finito di recuperare i dati
+                    treeView.bind("dataBound", function (e) {
+                        try {
+                            //Occorre verificare se il treeview e' visibile perche' dopo la compressione del 
+                            //treeview la funzione corrente viene chiamata ancora una volta, non chiaro perche' 
+                            if (treeviewCampiDaIncludere.element.is(":hidden")) {
 
-    //                                //Aumenta le dimensioni della finestra popup perche' per default e' molto piccola
-    //                                aumentaDimensioniFinestraPopupIncludiCampi();
+                                //Richiede un espansione del treeview. Per espanderlo tutto saranno necessarie
+                                //diverse chiamate alla funzione expand
+                                treeviewCampiDaIncludere.expand(".k-item");
 
-    //                                //Abilita la visualizzazione globale delle eccezioni precedentemente disabilitate
-    //                                eccezioniAbilitate = true;
-    //                            }
-    //                        }
-    //                    }
-    //                    catch (err) {
-    //                    }
-    //                });
-    //            }
-    //        });
-    //    }
-    //});
+                                //Quando il treeview e' espanso tutto quanto non ci saranno piu' elementi
+                                //di classe k-i-expand
+                                if (treeviewCampiDaIncludere.element.find('span.k-i-expand').length == 0) {
+
+                                    //Richiede la compressione del treeview. Curiosamente dopo questa
+                                    //richiesta si verifica un ulteriore databound come se il treeview recuperasse dati
+                                    treeviewCampiDaIncludere.element.data("kendoTreeView").collapse(".k-item");
+
+                                    //Mostra il treeview
+                                    treeviewCampiDaIncludere.element.show();
+
+                                    //Nasconde l'icona progress
+                                    kendo.ui.progress($('.k-window-titlebar'), false);
+
+                                    //Aumenta le dimensioni della finestra popup perche' per default e' molto piccola
+                                    aumentaDimensioniFinestraPopupIncludiCampi();
+
+                                    //Abilita la visualizzazione globale delle eccezioni precedentemente disabilitate
+                                    eccezioniAbilitate = true;
+                                }
+                            }
+                        }
+                        catch (err) {
+                        }
+                    });
+                }
+            });
+        }
+    });
 
     //Configurator
     //impostaConfigurator(_dSource);
